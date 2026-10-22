@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ticket Tear · Holographic pass</title>
+    <meta name="description" content="A 3D concert ticket you can bend, flip and tear off. Paper physics, holographic foil and a rip sound made in code. Built with Gemini 4 Argon." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ticket Tear · Holographic pass" />
+    <meta property="og:description" content="A 3D concert ticket you can bend, flip and tear off. Paper physics, holographic foil and a rip sound made in code. Built with Gemini 4 Argon." />
+    <meta property="og:url" content="https://sam1983aing.github.io/ticket-tear/" />
+    <meta property="og:image" content="https://sam1983aing.github.io/ticket-tear/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://sam1983aing.github.io/ticket-tear/og.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body data-theme="alabaster">
+    <div class="studio-backdrop" aria-hidden="true">
+      <div class="studio-grid"></div>
+      <div class="studio-spotlight"></div>
+    </div>
+
+    <!-- Minimal Gallery Header -->
+    <header class="top-bar">
+      <div class="brand-cluster">
+        <span class="brand-dot"></span>
+        <span class="brand-title">ATELIER KINETIC // ADMIT ONE</span>
+        <span class="brand-tag">350GSM VERLET FOIL PASS</span>
+      </div>
+
+      <nav class="header-actions" aria-label="Stage Controls">
+        <button id="btn-flip" class="action-pill" type="button" title="Flip Pass 180 Degrees (F)">
+          <span class="pill-label">Flip Pass</span>
+          <kbd class="pill-kbd">F</kbd>
+        </button>
+
+        <button id="btn-xray" class="action-pill" type="button" title="Toggle Verlet Spring & Normal X-Ray (X)">
+          <span class="pill-indicator"></span>
+          <span class="pill-label">Physics &amp; Shader X-Ray</span>
+          <kbd class="pill-kbd">X</kbd>
+        </button>
+
+        <button id="btn-reset" class="action-pill" type="button" title="Issue Fresh Untorn Pass (R)">
+          <span class="pill-label">Issue Fresh Pass</span>
+          <kbd class="pill-kbd">R</kbd>
+        </button>
+
+        <button id="btn-audio" class="action-pill is-active" type="button" title="Toggle Web Audio Fiber Rip Synthesis">
+          <span class="pill-label" id="audio-label">Audio: On</span>
+        </button>
+
+        <button id="btn-theme" class="action-pill" type="button" title="Switch Gallery Alabaster / Dark Concert Hall Theme">
+          <span class="pill-label" id="theme-label">Dark Concert Hall</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Asymmetric Two-Column Keynote Checkout Layout -->
+    <main class="checkout-workspace">
+      <!-- Left Column: Minimal Event Checkout Summary -->
+      <section class="checkout-column" aria-label="Event Pass Checkout">
+        <div class="checkout-card">
+          <!-- Status & Session Header -->
+          <div class="card-meta-row">
+            <div id="status-badge" class="status-badge status-pending">
+              <span class="status-dot"></span>
+              <span id="status-text">AWAITING TEAR VALIDATION</span>
+            </div>
+            <span class="session-code">MTL · NOV 14 · 20:00 EST</span>
+          </div>
+
+          <!-- Event Title & Venue -->
+          <div class="event-header">
+            <p class="event-eyebrow">ANNUAL AUDIOVISUAL ARCHITECTURE &amp; LIGHT KEYNOTE</p>
+            <h1 class="event-title">KINETIC LIGHTS SYMPOSIUM · MONTREAL</h1>
+            <p class="event-venue">
+              Satosphere 360° Projection Dome · Quartier des Spectacles · Acoustic Ring
+            </p>
+          </div>
+
+          <!-- 01: Switchable Foil Tier Selector -->
+          <div class="control-section">
+            <div class="section-label-row">
+              <span class="section-label">01 // SELECT HOLOGRAPHIC FOIL EDITION</span>
+              <span class="section-hint">LIVE 3D SHADER &amp; EMBOSS</span>
+            </div>
+
+            <div class="tier-list" id="tier-list" role="radiogroup" aria-label="Foil Edition">
+              <button
+                type="button"
+                class="tier-option is-selected"
+                data-tier="silver"
+                role="radio"
+                aria-checked="true"
+              >
+                <span class="tier-swatch swatch-silver"></span>
+                <span class="tier-info">
+                  <span class="tier-name">01 · Silver Holo Edition</span>
+                  <span class="tier-desc">Alabaster 350gsm stock &amp; liquid chrome rainbow foil</span>
+                </span>
+                <span class="tier-price">$180</span>
+              </button>
+
+              <button
+                type="button"
+                class="tier-option"
+                data-tier="gold"
+                role="radio"
+                aria-checked="false"
+              >
+                <span class="tier-swatch swatch-gold"></span>
+                <span class="tier-info">
+                  <span class="tier-name">02 · Founders Gold Leaf</span>
+                  <span class="tier-desc">Obsidian stock &amp; 24K hammered solar prismatic foil</span>
+                </span>
+                <span class="tier-price">$420</span>
+              </button>
+
+              <button
+                type="button"
+                class="tier-option"
+                data-tier="ultraviolet"
+                role="radio"
+                aria-checked="false"
+              >
+                <span class="tier-swatch swatch-ultraviolet"></span>
+                <span class="tier-info">
+                  <span class="tier-name">03 · Ultraviolet Prism</span>
+                  <span class="tier-desc">Deep cobalt stock &amp; magenta-cyan dichroic foil</span>
+                </span>
+                <span class="tier-price">$290</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 02: Seat & Acoustic Zone Selector -->
+          <div class="control-section">
+            <div class="section-label-row">
+              <span class="section-label">02 // ASSIGNED SEAT &amp; ACOUSTIC ZONE</span>
+              <span id="active-gate-label" class="section-hint">GATE 01 · WEST</span>
+            </div>
+
+            <div class="seat-grid" id="seat-grid" role="radiogroup" aria-label="Seat Assignment">
+              <button type="button" class="seat-pill is-selected" data-seat="A-04">
+                <span class="seat-code">ROW A · SEAT 04</span>
+                <span class="seat-zone">ACOUSTIC RING NORTH</span>
+              </button>
+              <button type="button" class="seat-pill" data-seat="AA-01">
+                <span class="seat-code">ROW AA · SUITE 01</span>
+                <span class="seat-zone">FOUNDERS MEZZANINE</span>
+              </button>
+              <button type="button" class="seat-pill" data-seat="MZ-12">
+                <span class="seat-code">MEZZANINE · BOX 12</span>
+                <span class="seat-zone">UPPER PROJECTION ARC</span>
+              </button>
+              <button type="button" class="seat-pill" data-seat="GA-09">
+                <span class="seat-code">DOME FLOOR · GA-09</span>
+                <span class="seat-zone">SUB-BASS IMMERSION</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 03: Perforation Seam Fiber Status & Tactile Tear Validation -->
+          <div class="perforation-box" id="perforation-box">
+            <div class="perf-header-row">
+              <span class="section-label">03 // PERFORATED STUB TEAR VALIDATION</span>
+              <span id="seam-pct-readout" class="seam-pct-readout">0% TORN · 25/25 FIBERS INTACT</span>
+            </div>
+
+            <!-- 25 Individual Perforation Seam Fiber Segments -->
+            <div class="fiber-bar-strip" id="fiber-bar-strip" aria-label="Perforation Seam Fibers"></div>
+
+            <!-- Interactive Tear Action Row -->
+            <div class="checkout-footer-row">
+              <div class="price-summary">
+                <span class="price-label">TOTAL ADMISSION</span>
+                <div class="price-value-group">
+                  <span id="checkout-price" class="price-value">$180 CAD</span>
+                  <span id="checkout-serial" class="serial-tag">KLS-01-AG-A-04</span>
+                </div>
+              </div>
+
+              <div class="cta-cluster">
+                <button id="btn-tear-cta" class="primary-tear-btn" type="button">
+                  <span id="btn-tear-text">Tear Perforated Stub</span>
+                  <span class="btn-tear-sub">OR SLICE 3D SEAM</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right / Center Stage: Suspended 3D Perforated Holographic Pass -->
+      <section class="stage-column" aria-label="Interactive 3D Holographic Ticket Stage">
+        <div id="canvas-stage" class="canvas-stage">
+          <!-- Floating Seam Cut Cursor Pill -->
+          <div id="seam-cursor-pill" class="seam-cursor-pill" aria-hidden="true">
+            <span class="scissor-icon">✂</span>
+            <span id="seam-cursor-text">SLICE SEAM TO TEAR</span>
+          </div>
+
+          <!-- Top-Right Stage Badge -->
+          <div class="stage-corner-pill">
+            <span id="stage-face-indicator">FRONT FACE · HOLOGRAPHIC FOIL</span>
+          </div>
+
+          <!-- [X] Verlet Physics & Seam Telemetry Overlay Bar (Shown when X-Ray Mode is active) -->
+          <div id="xray-telemetry-bar" class="xray-telemetry-bar is-hidden" role="status">
+            <div class="telemetry-metrics">
+              <div class="t-metric">
+                <span class="t-label">ACTIVE SPRINGS</span>
+                <span id="metric-springs" class="t-value">2,540 / 2,540</span>
+              </div>
+              <div class="t-metric">
+                <span class="t-label">SEAM INTEGRITY</span>
+                <span id="metric-seam" class="t-value">100% (25/25)</span>
+              </div>
+              <div class="t-metric">
+                <span class="t-label">MAX FIBER TENSION</span>
+                <span id="metric-tension" class="t-value">0.02 N</span>
+              </div>
+            </div>
+            <div class="telemetry-legend">
+              <span class="legend-item"><i class="swatch-dot dot-cyan"></i>Structural</span>
+              <span class="legend-item"><i class="swatch-dot dot-indigo"></i>Shear &amp; Bend</span>
+              <span class="legend-item"><i class="swatch-dot dot-amber"></i>Breakable Seam</span>
+            </div>
+          </div>
+
+          <!-- Subtle Bottom Stage Tactile Gesture Hints -->
+          <div class="stage-gesture-bar">
+            <span class="gesture-item">
+              <strong>Flex Card:</strong> Drag upper pass
+            </span>
+            <span class="gesture-sep">·</span>
+            <span class="gesture-item">
+              <strong>Tear Stub:</strong> Slice across seam or pull stub down
+            </span>
+            <span class="gesture-sep">·</span>
+            <span class="gesture-item">
+              <strong>Inspect Back:</strong> Double-click or <kbd>F</kbd>
+            </span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
