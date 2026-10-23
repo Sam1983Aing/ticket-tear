@@ -212,6 +212,26 @@ body {
   color: inherit;
 }
 
+/* Link to the source repo (added after the first build) */
+.source-pill {
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pill-arrow {
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+@media (max-width: 1080px) {
+  /* The header runs off the right edge on phones, so the link goes first there */
+  .source-pill {
+    order: -1;
+  }
+}
+
 /* Main Two-Column Checkout Workspace */
 .checkout-workspace {
   position: relative;
