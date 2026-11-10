@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#272523">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Perihelion · Tear to enter</title>
+<meta name="description" content="A 3D concert ticket you can bend, flip and tear off. Built with Claude Fable 5.2. The paper, the foil and the tearing sound are all made in code.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Perihelion · Tear to enter">
+<meta property="og:description" content="A 3D concert ticket you can bend, flip and tear off. Built with Claude Fable 5.2. The paper, the foil and the tearing sound are all made in code.">
+<meta property="og:url" content="https://sam1983aing.github.io/ticket-tear/fable/">
+<meta property="og:image" content="https://sam1983aing.github.io/ticket-tear/fable/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sam1983aing.github.io/ticket-tear/fable/og.jpg">
+<style>
+  :root {
+    --bg: #272523; --ink: #f0e9d8; --mute: #aaa293; --dim: #80796d; --line: rgba(240, 233, 216, .17); --sun: #ff9a5c;
+    --sans: "Geist", "Inter Tight", "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+    --mono: "Geist Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    --pad: clamp(20px, 3.2vw, 46px);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; overscroll-behavior: none; }
+  body { font: 13.5px/1.5 var(--sans); -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  #stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: default; outline: none; }
+  .grain { position: fixed; inset: 0; pointer-events: none; opacity: .09; mix-blend-mode: overlay; z-index: 5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .ui { position: fixed; z-index: 3; pointer-events: none; }
+  .label { font: 500 10.5px/1.5 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: var(--mute); }
+
+  .top { top: 0; left: 0; right: 0; padding: calc(var(--pad) * .8) var(--pad); display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline; gap: 20px; }
+  .mark { font: 500 18px/1 var(--sans); letter-spacing: -.03em; }
+  .mark span { font: 500 10.5px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: var(--mute); margin-left: 14px; }
+  .steps { list-style: none; padding: 0; display: flex; gap: 26px; }
+  .steps li { font: 500 10.5px/1.5 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: var(--dim); }
+  .steps li span { font-weight: 400; margin-right: 8px; }
+  .steps li.on { color: var(--ink); }
+  .coords { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .info { left: var(--pad); top: 50%; transform: translateY(-50%); width: min(330px, 27vw); }
+  .info h1 { font: 500 clamp(52px, 5.6vw, 80px)/.92 var(--sans); letter-spacing: -.055em; margin: 14px 0 20px -4px; }
+  .info .sub { font: 400 16px/1.45 var(--sans); letter-spacing: -.01em; color: #d3cbba; max-width: 20em; }
+  .order { margin-top: 34px; border-top: 1px solid var(--line); }
+  .order div { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .order dt { font: 500 10.5px/1.5 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: var(--mute); }
+  .order dd { font: 500 14.5px/1.2 var(--sans); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .order .total dt { color: var(--ink); }
+  .order .total dd { font-size: 22px; letter-spacing: -.035em; }
+  .note { margin-top: 16px; font-size: 12px; line-height: 1.55; color: var(--mute); max-width: 26em; }
+
+  .status { right: var(--pad); top: 50%; transform: translateY(-50%); width: min(290px, 22vw); }
+  .status .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--sun); margin-right: 10px; vertical-align: 1px; animation: pulse 1.8s ease-in-out infinite; }
+  .status .dot.ok { background: var(--ink); animation: none; }
+  .status b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; margin-left: 6px; }
+  .lead { font: 500 30px/1.06 var(--sans); letter-spacing: -.04em; margin: 14px 0 12px; }
+  .how { font: 400 14.5px/1.45 var(--sans); letter-spacing: -.005em; color: #d3cbba; }
+  .teeth { margin-top: 30px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .teeth span { font: 500 42px/1 var(--sans); letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+  .teeth i { font: 500 10.5px/1 var(--mono); font-style: normal; letter-spacing: .09em; text-transform: uppercase; color: var(--mute); }
+  .meter { flex: 0 0 100%; height: 1px; background: var(--line); margin-top: 10px; }
+  .meter b { display: block; height: 1px; width: 0; background: var(--ink); margin: 0; }
+  .status .in { display: none; }
+  .status[data-state="in"] .held { display: none; }
+  .status[data-state="in"] .in { display: block; animation: rise .9s cubic-bezier(.2, .7, .1, 1) both; }
+  .in h2 { font: 500 clamp(44px, 4.4vw, 62px)/.95 var(--sans); letter-spacing: -.055em; margin: 14px 0 12px -3px; }
+  #mark { display: block; width: 100%; height: auto; margin: 26px 0 8px; overflow: visible; }
+  #mark path { fill: var(--ink); }
+  .code { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 9px; }
+  .code b { font: 500 13px/1 var(--mono); letter-spacing: .06em; margin: 0; }
+  .fine { margin-top: 12px; font-size: 12px; line-height: 1.55; color: var(--mute); }
+
+  .bar { left: 0; right: 0; bottom: 0; padding: calc(var(--pad) * .75) var(--pad); display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .hints { color: var(--dim); }
+  .btns { display: flex; gap: 8px; pointer-events: auto; }
+  button { font: 500 10.5px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 99px; padding: 11px 16px 10px; cursor: pointer; transition: background .25s, border-color .25s; -webkit-tap-highlight-color: transparent; }
+  button:hover { border-color: rgba(240, 233, 216, .55); }
+  button:focus-visible { outline: 1px solid var(--ink); outline-offset: 3px; }
+
+  .cue { position: fixed; z-index: 4; left: 0; top: 0; pointer-events: none; display: flex; align-items: center; gap: 12px; opacity: 0; transition: opacity .6s; will-change: transform; }
+  .cue.on { opacity: 1; }
+  .cue span { width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 1px solid rgba(236, 228, 209, .9); border-radius: 50%; animation: tug 2.2s cubic-bezier(.5, 0, .2, 1) infinite; }
+  .cue em { font: 500 10.5px/1 var(--mono); font-style: normal; letter-spacing: .09em; text-transform: uppercase; margin-top: -15px; text-shadow: 0 0 12px #000, 0 0 4px #000; white-space: nowrap; }
+  #cursor { position: fixed; z-index: 9; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 1.5px solid #fff; background: rgba(255, 255, 255, .12); pointer-events: none; display: none; transition: width .12s, height .12s, margin .12s, background .12s; box-shadow: 0 0 0 1px rgba(0, 0, 0, .35); }
+  #cursor.down { background: rgba(255, 255, 255, .45); }
+  #cursor.touch { width: 46px; height: 46px; margin: -23px 0 0 -23px; border-color: rgba(255, 255, 255, .7); opacity: 0; transition: opacity .2s; }
+  #cursor.touch.down { opacity: 1; }
+
+  @keyframes pulse { 50% { opacity: .25; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes tug { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 20% { opacity: 1; } 70% { transform: translate(10px, 26px) scale(.8); opacity: 1; } 100% { transform: translate(10px, 26px) scale(.8); opacity: 0; } }
+
+  /* phones and narrow windows: the ticket takes the middle, words above and below */
+  @media (max-width: 999px) {
+    .top { padding: 16px 20px 0; grid-template-columns: 1fr auto; }
+    .mark { font-size: 16px; } .mark span { display: none; }
+    .steps { gap: 14px; } .steps li:not(.on) { display: none; }
+    .coords { display: none; }
+    .info { left: 20px; right: 20px; top: 44px; width: auto; transform: none; }
+    .info .label { font-size: 9.5px; }
+    .info h1, .info .sub, .order, .note { display: none; }
+    .cue em { display: none; }
+    .status { left: 20px; right: 20px; top: auto; bottom: 56px; width: auto; transform: none; }
+    .held { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; align-items: end; }
+    .held .label { grid-column: 1 / -1; }
+    .lead { font-size: 24px; margin: 6px 0 2px; }
+    .how { font-size: 13.5px; grid-column: 1; }
+    .teeth { grid-column: 2; grid-row: 2 / span 2; margin: 0; justify-content: flex-end; gap: 6px; }
+    .teeth span { font-size: 30px; } .teeth i { font-size: 9px; } .meter { display: none; }
+    .status[data-state="in"] .in { display: grid; grid-template-columns: auto 1fr; column-gap: 18px; align-items: end; }
+    .in .label { grid-column: 1 / -1; }
+    .in h2 { font-size: 40px; margin: 4px 0 0 -2px; grid-row: 2 / span 2; }
+    .in .how { font-size: 13px; align-self: end; }
+    #mark { margin: 6px 0 4px; grid-column: 2; }
+    .code { grid-column: 1 / -1; margin-top: 8px; }
+    .fine { display: none; }
+    .bar { padding: 0 20px 14px; }
+    .hints { display: none; }
+    .btns { width: 100%; justify-content: space-between; }
+    button { padding: 9px 13px 8px; font-size: 9.5px; }
+  }
+  @media (max-height: 700px) and (max-width: 999px) { .how { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .cue span, .status .dot { animation: none; } }
+</style>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+</head>
+<body>
+<canvas id="stage" tabindex="0" aria-label="A concert ticket you can bend, flip and tear. Tear the stub to confirm your place. Press T or Enter to tear it without dragging."></canvas>
+<div class="grain"></div>
+
+<header class="ui top">
+  <div class="mark">Perihelion<span>Box office</span></div>
+  <ol class="steps"><li><span>01</span>Seat</li><li><span>02</span>Details</li><li class="on"><span>03</span>Tear</li></ol>
+  <div class="coords label">24°37′S 70°24′W · 2,635 m</div>
+</header>
+
+<section class="ui info">
+  <p class="label">One night only · 02 Jan 2027</p>
+  <h1>Perihelion</h1>
+  <p class="sub">A concert under the open dome, on the night the Earth passes closest to the Sun.</p>
+  <dl class="order">
+    <div><dt>Admission</dt><dd>1 × Main dome</dd></div>
+    <div><dt>Seat</dt><dd>Row C · 14</dd></div>
+    <div><dt>Doors</dt><dd>21:00</dd></div>
+    <div><dt>Ticket</dt><dd>$180.00</dd></div>
+    <div><dt>Booking fee</dt><dd>$0.00</dd></div>
+    <div class="total"><dt>Total</dt><dd>$180.00</dd></div>
+  </dl>
+  <p class="note">The card ending 4242 is held, not charged. There is no button on this page. Tear the stub off and the seat is yours.</p>
+</section>
+
+<section class="ui status" id="status" data-state="held" aria-live="polite">
+  <div class="held">
+    <p class="label"><span class="dot"></span>Held for you<b id="clock">09:59</b></p>
+    <p class="lead">Tear the stub to confirm.</p>
+    <p class="how">Pull it away from the ticket. Slowly, or in one go.</p>
+    <div class="teeth"><span id="count">00</span><i>/ 44 teeth</i><div class="meter"><b id="meter"></b></div></div>
+  </div>
+  <div class="in">
+    <p class="label"><span class="dot ok"></span>Confirmed · $180.00 paid</p>
+    <h2>You’re in.</h2>
+    <p class="how">Row C, seat 14. Doors at 21:00.</p>
+    <svg id="mark" viewBox="0 0 290 44" aria-label="The shape of your tear"><path d=""/></svg>
+    <p class="code"><span class="label">Entry mark</span><b id="code"></b></p>
+    <p class="fine"><span id="tale"></span> No two edges tear the same. The door keeps the stub, and on the night the two halves have to fit.</p>
+  </div>
+</section>
+
+<footer class="ui bar">
+  <p class="hints label">Drag the card to bend it · Drag the dark to turn it · Double tap to flip · T tears it for you</p>
+  <div class="btns">
+    <button id="flip" type="button">Flip</button>
+    <button id="sound" type="button" aria-pressed="true">Sound on</button>
+    <button id="again" type="button">New ticket</button>
+  </div>
+</footer>
+
+<div class="cue" id="cue"><span></span><em>Pull to tear</em></div>
+<div id="cursor"></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

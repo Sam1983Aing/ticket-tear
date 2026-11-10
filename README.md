@@ -2,7 +2,7 @@
 
 A concert ticket checkout where the ticket is a real 3D object. Bend it, flip it over and tear off the stub, one paper fiber at a time.
 
-[**Play with it live**](https://sam1983aing.github.io/ticket-tear/) · [**The prompt**](PROMPT.md) · [**Source**](https://github.com/Sam1983Aing/ticket-tear)
+[**Play with it live**](https://sam1983aing.github.io/ticket-tear/) · [**The prompt**](PROMPT.md) · [**Source**](https://github.com/Sam1983Aing/ticket-tear) · [**The Fable 5.2 version**](https://sam1983aing.github.io/ticket-tear/fable/)
 
 ![The holographic ticket bending, the stub tearing off and falling away](media/tear.gif)
 
@@ -30,6 +30,20 @@ Vite, TypeScript, Three.js, custom GLSL shaders and the Web Audio API. No images
 
 **4. A rip sound made in code.** Each fiber that snaps plays a short band-passed noise burst. The pitch climbs from about 1.35 kHz to 2.8 kHz across the 25 fibers, so a fast swipe sounds like a zip and a slow drag lets you hear each one go. A chord plays when the stub comes off. See `src/soundEngine.ts`.
 
+## The Fable 5.2 version
+
+On Nov 9, 2026 I gave Claude Fable 5.2 the same idea, not this prompt, and let it design its own ticket. It came back with Perihelion, a concert at an observatory on the night the Earth passes closest to the Sun.
+
+[**Play the Fable 5.2 version**](https://sam1983aing.github.io/ticket-tear/fable/)
+
+- No cloth simulation. Every bend is a roll around one straight line, so the card can't stretch. That's why it feels stiffer than the Argon one.
+- The perforation is 44 paper bridges, each with its own breaking point. How you tear decides the shape of the edge, and that edge becomes your entry mark.
+- Every sound is made in code. Each bridge is a short burst of noise with a low knock under it.
+- Plain JavaScript and Three.js with no build step. The code is in `public/fable/`, with the bend in `src/paper.js` and the perforation in `src/tear.js`.
+- The paper, the tear and the sound are its first pass. After that I asked for a cleaner hologram, a sans serif and a lighter background.
+
+Drag the card to bend it, drag the background to turn it, double-tap or press `F` to flip it, `T` tears it without dragging and `R` prints a new ticket.
+
 ## Run it locally
 
 ```bash
@@ -51,6 +65,8 @@ src/holographicShader.ts       foil, glitter, emboss and the punched holes
 src/ticketTextureGenerator.ts  front and back of the ticket, drawn on canvas
 src/soundEngine.ts             the fiber snaps and the chord
 src/style.css                  layout and both themes
+public/fable/                  the Fable 5.2 version, copied as is into docs/fable/ on build
+public/argon/                  a short link that sends /argon/ to the Argon page
 docs/                          the built site for GitHub Pages
 media/                         the preview in this README
 PROMPT.md                      the prompt
@@ -58,8 +74,8 @@ PROMPT.md                      the prompt
 
 ## Notes
 
-- Needs a network connection for the Google Fonts (Instrument Serif, JetBrains Mono and Plus Jakarta Sans).
+- Needs a network connection for the Google Fonts (Instrument Serif, JetBrains Mono and Plus Jakarta Sans, and Geist and Geist Mono on the Fable version).
 - Three.js is MIT licensed.
-- Kinetic Lights Symposium, Atelier Kinetic and the prices are made up. This is a design study, with no link to any event, venue or ticketing company. The QR code and barcode are decoration.
+- Kinetic Lights Symposium, Atelier Kinetic and the prices are made up. This is a design study, with no link to any event, venue or ticketing company. The QR code and barcode are decoration. Perihelion, Cerro Alba Observatory and Lumen Octet on the Fable version are made up too.
 
 Made by Samnang Aing. I share builds like this as I go on [X](https://x.com/SammmAing) and [Threads](https://www.threads.com/@samnang.aing).
